@@ -7,6 +7,7 @@ import emailjs from "emailjs-com";
 import { PieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 // ... funcții existente
+
 function generateUniqueCode(existingCodes = []) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let code;
@@ -35,14 +36,16 @@ function sendEmailWithPDF({ name, cnp, code, date, email }, pdf) {
   const formData = new FormData();
   formData.append("to_name", name);
   formData.append("to_email", email);
-  formData.append("message", `Cod bilet: ${code} \\n Data: ${date}`);
+  formData.append("message", `Cod bilet: ${code} 
+ Data: ${date}`);
   formData.append("file", blob, `bilet_tombola_${code}.pdf`);
 
-  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+  emailjs.send("service_yze3lsw", "template_erv3srb", {
     to_name: name,
     to_email: email,
-    message: `Cod bilet: ${code} \\n Data: ${date}`
-  }, "YOUR_PUBLIC_KEY");
+    message: `Cod bilet: ${code} 
+ Data: ${date}`
+  }, "NnbNfXBJqlHSv9bfv");
 }
 
 export default function TombolaCalculator() {
