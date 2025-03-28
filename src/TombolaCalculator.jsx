@@ -7,6 +7,43 @@ import emailjs from "emailjs-com";
 import { PieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
 // ... funcții existente
+function generateUniqueCode(existingCodes = []) {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code;
+  do {
+    code = "";
+    for (let i = 0; i < 8; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+  } while (existingCodes.includes(code));
+  return code;
+}
+
+function generatePDF({ name, cnp, code, date }) {
+  const doc = new jsPDF();
+  doc.setFontSize(14);
+  doc.text("Dovadă participare tombolă", 20, 20);
+  doc.text(`Nume: ${name}`, 20, 40);
+  doc.text(`CNP: ${cnp}`, 20, 50);
+  doc.text(`Cod bilet: ${code}`, 20, 60);
+  doc.text(`Data achiziției: ${date}`, 20, 70);
+  return doc;
+}
+
+function sendEmailWithPDF({ name, cnp, code, date, email }, pdf) {
+  const blob = pdf.output("blob");
+  const formData = new FormData();
+  formData.append("to_name", name);
+  formData.append("to_email", email);
+  formData.append("message", `Cod bilet: ${code} \\n Data: ${date}`);
+  formData.append("file", blob, `bilet_tombola_${code}.pdf`);
+
+  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+    to_name: name,
+    to_email: email,
+    message: `Cod bilet: ${code} \\n Data: ${date}`
+  }, "YOUR_PUBLIC_KEY");
+}
 
 export default function TombolaCalculator() {
   const [price, setPrice] = useState(50);
